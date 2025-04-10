@@ -18,8 +18,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider , useAuth} from "./Context/AuthContext";
 import PublicRoute from "./components/PublicRoute";
 
-const ProfileElement = () => {
-  const { user } = useAuth();
+
+function App() {
+   const { user } = useAuth();
+
+  const ProfileElement = () => {
 
   if (user?.role === "user") {
     return <UpdateProfile />;
@@ -30,7 +33,17 @@ const ProfileElement = () => {
   }
 };
 
-function App() {
+  
+  const DashboardRouter = () => {
+
+  if (user?.role === "user") {
+    return <UserDashboard />;
+  } else if (user?.role === "employee") {
+    return <EmployeeDashboard />;
+  } else {
+    return <div>Unauthorized</div>; // or a redirect
+  }
+};
 
   return (
     <AuthProvider>
@@ -58,19 +71,19 @@ function App() {
           <Route
             path="/dashboard/user"
             element={
-              <ProtectedRoute allowedRoles={["user"]}>
-                <UserDashboard />
-              </ProtectedRoute>
+              <ProtectedRoute allowedRoles={["user", "employee"]}>
+      <DashboardRouter />
+    </ProtectedRoute>
             }
           />
-          <Route
+{/*           <Route
             path="/dashboard/employee"
             element={
               <ProtectedRoute allowedRoles={["employee"]}>
                 <EmployeeDashboard />
               </ProtectedRoute>
             }
-          />
+          /> */}
 {/*           <Route
             path="/profile"
             element={
