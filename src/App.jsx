@@ -15,10 +15,23 @@ import UpdateProfile from "./pages/UpdateProfile";
 import UpdateRecruiter from "./pages/UpdateRecruiter";
 import Landing from "./pages/Landing";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./Context/AuthContext";
+import { AuthProvider , useAuth} from "./Context/AuthContext";
 import PublicRoute from "./components/PublicRoute";
 
+const ProfileElement = () => {
+  const { user } = useAuth();
+
+  if (user?.role === "user") {
+    return <UpdateProfile />;
+  } else if (user?.role === "employee") {
+    return <UpdateRecruiter />;
+  } else {
+    return <div>Unauthorized</div>; // or a <Navigate to="/unauthorized" />
+  }
+};
+
 function App() {
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -58,7 +71,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+{/*           <Route
             path="/profile"
             element={
               <ProtectedRoute allowedRoles={["user"]}>
@@ -73,7 +86,15 @@ function App() {
                 <UpdateRecruiter />
               </ProtectedRoute>
             }
-          />
+          /> */}
+          <Route
+  path="/profile"
+  element={
+    <ProtectedRoute allowedRoles={["user", "employee"]}>
+      <ProfileElement />
+    </ProtectedRoute>
+  }
+/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
