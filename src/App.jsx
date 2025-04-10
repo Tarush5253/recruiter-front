@@ -20,10 +20,9 @@ import PublicRoute from "./components/PublicRoute";
 
 
 function App() {
-   const { user } = useAuth();
 
   const ProfileElement = () => {
-
+ const { user } = useAuth();
   if (user?.role === "user") {
     return <UpdateProfile />;
   } else if (user?.role === "employee") {
@@ -35,7 +34,7 @@ function App() {
 
   
   const DashboardRouter = () => {
-
+ const { user } = useAuth();
   if (user?.role === "user") {
     return <UserDashboard />;
   } else if (user?.role === "employee") {
